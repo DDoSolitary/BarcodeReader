@@ -1,0 +1,6 @@
+packages/
+Debug/
+Release/
+.vs/
+*.user
+*.log

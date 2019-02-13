@@ -1,0 +1,41 @@
+﻿<Window x:Class="BarcodeReader.CaptureWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+		xmlns:local="clr-namespace:BarcodeReader"
+		Title="Screenshot - BarcodeReader" WindowState="Maximized" WindowStyle="None" Opacity="0"
+		KeyDown="Window_KeyDown" Closed="Window_Closed" ContentRendered="Window_ContentRendered">
+	<Window.DataContext>
+		<local:SelectionInfo/>
+	</Window.DataContext>
+	<Canvas x:Name="_captureCanvas"
+			MouseDown="CaptureCanvas_MouseDown"
+			MouseMove="CaptureCanvas_MouseMove"
+			MouseUp="CaptureCanvas_MouseUp">
+		<Canvas.Resources>
+			<Style TargetType="{x:Type Rectangle}">
+				<Setter Property="Opacity" Value="0.75"/>
+				<Setter Property="Fill" Value="Black"/>
+			</Style>
+		</Canvas.Resources>
+		<Canvas.Background>
+			<ImageBrush x:Name="_bgBrush"/>
+		</Canvas.Background>
+		<Rectangle Canvas.Left="0"
+				   Canvas.Top="0"
+				   Width="{Binding CanvasWidth}"
+				   Height="{Binding SelectTop}"/>
+		<Rectangle Canvas.Left="0"
+				   Canvas.Top="{Binding SelectBottom}"
+				   Width="{Binding CanvasWidth}"
+				   Height="{c:Binding CanvasHeight-SelectBottom}"/>
+		<Rectangle Canvas.Left="0"
+				   Canvas.Top="{Binding SelectTop}"
+				   Width="{Binding SelectLeft}"
+				   Height="{c:Binding SelectBottom-SelectTop}"/>
+		<Rectangle Canvas.Left="{Binding SelectRight}"
+				   Canvas.Top="{Binding SelectTop}"
+				   Width="{c:Binding CanvasWidth-SelectRight}"
+				   Height="{c:Binding SelectBottom-SelectTop}"/>
+	</Canvas>
+</Window>
