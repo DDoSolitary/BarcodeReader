@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using NativeUtils;
@@ -8,18 +7,31 @@ using NativeUtils;
 namespace BarcodeReader {
 	public partial class MainWindow : Window {
 		internal static bool CaptureWndShown = false;
+		private readonly MsgOnlyWindow _msgWindow = null;
 
 		public MainWindow() {
 			this.InitializeComponent();
-			Utils.RegisterHotKey(0, KeyModifier.Control, 'Q');
-			Utils.OnHotKey += id => {
-				if (id == 0) this.Dispatcher.Invoke(this.ShowCaptureWindow);
-			};
-			Utils.OnClipboardUpdate += () => {
-				if (clipboardCheckBox.IsChecked == false) {
-					this.Dispatcher.Invoke(() => this.ReadClipboard(false));
-				}
-			};
+			try {
+				_msgWindow = new MsgOnlyWindow();
+				_msgWindow.RegisterHotKey(0, KeyModifier.Control, 'Q');
+				_msgWindow.OnHotKey += id => {
+					if (id == 0) this.Dispatcher.Invoke(this.ShowCaptureWindow);
+				};
+				_msgWindow.OnClipboardUpdate += () => {
+					this.Dispatcher.Invoke(() => {
+						if (clipboardCheckBox.IsChecked == false) {
+							this.ReadClipboard(false);
+						}
+					});
+				};
+			} catch (Exception e) {
+				App.ShowError($"Initialization failed: {e.Message}");
+				this.Close();
+			}
+		}
+
+		private void Window_Closed(object sender, EventArgs e) {
+			_msgWindow?.Close();
 		}
 
 		private void ScreenButton_Click(object sender, RoutedEventArgs e) {

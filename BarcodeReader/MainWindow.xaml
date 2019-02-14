@@ -1,7 +1,8 @@
 ﻿<Window x:Class="BarcodeReader.MainWindow"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		Title="BarcodeReader" Height="150" Width="300" ResizeMode="CanMinimize">
+		Title="BarcodeReader" Height="150" Width="300" ResizeMode="CanMinimize"
+		Closed="Window_Closed">
 	<Grid>
 		<Grid.Resources>
 			<Style TargetType="{x:Type Button}">
