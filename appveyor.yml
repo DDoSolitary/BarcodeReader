@@ -10,6 +10,11 @@ after_build:
       $project = $Env:APPVEYOR_PROJECT_NAME
       $name = "$project-$($Env:APPVEYOR_REPO_COMMIT.Substring(0, 7))-$Env:PLATFORM.zip"
       $dir = ".\$project\bin\$Env:PLATFORM\$Env:CONFIGURATION"
-      7z a $name "$dir\$project.exe" "$dir\$project.exe.config" "$dir\*.dll" 'LICENSE'
+      if ($Env:PLATFORM -eq 'x86') {
+          $sys = "$Env:WINDIR\SysWOW64"
+      } else {
+          $sys = "$Env:WINDIR\System32"
+      }
+      7z a $name "$dir\$project.exe" "$dir\$project.exe.config" "$dir\*.dll" "$sys\vcruntime140.dll" 'LICENSE'
 artifacts:
   - path: '*.zip'
