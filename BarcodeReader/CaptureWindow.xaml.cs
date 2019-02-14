@@ -59,7 +59,7 @@ namespace BarcodeReader {
 
 		public CaptureWindow() {
 			this.InitializeComponent();
-			_info = this.DataContext as SelectionInfo;
+			_info = (SelectionInfo)this.DataContext;
 			try {
 				_bgBrush.ImageSource = this.GetScreenshot();
 			} catch (Exception e) {
@@ -82,7 +82,7 @@ namespace BarcodeReader {
 				this.Close();
 			} else if (e.Key == Key.Enter) {
 				var rect = new Int32Rect((int)_info.SelectLeft, (int)_info.SelectTop, (int)(_info.SelectRight - _info.SelectLeft), (int)(_info.SelectBottom - _info.SelectTop));
-				new ResultWindow(new CroppedBitmap(_bgBrush.ImageSource as BitmapSource, rect), true);
+				new ResultWindow(new CroppedBitmap((BitmapSource)_bgBrush.ImageSource, rect), true);
 				this.Close();
 			}
 		}
