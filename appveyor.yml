@@ -1,0 +1,15 @@
+﻿image: Visual Studio 2019 Preview
+platform:
+  - x86
+  - x64
+configuration: Release
+before_build:
+  - nuget restore
+after_build:
+  - ps: |
+      $project = $Env:APPVEYOR_PROJECT_NAME
+      $name = "$project-$($Env:APPVEYOR_REPO_COMMIT.Substring(0, 7))-$Env:PLATFORM.zip"
+      $dir = ".\$project\bin\$Env:PLATFORM\$Env:CONFIGURATION"
+      7z a $name "$dir\$project.exe" "$dir\$project.exe.config" "$dir\*.dll" 'LICENSE'
+artifacts:
+  - path: '*.zip'
