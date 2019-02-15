@@ -9,7 +9,11 @@ namespace BarcodeReader {
 
 		private void Application_Startup(object sender, StartupEventArgs e) {
 			AppDomain.CurrentDomain.UnhandledException += (s, args) => {
-				ShowError($"Unexpected error:{Environment.NewLine}{args.ExceptionObject}");
+				try {
+					ShowError($"Unexpected error:{Environment.NewLine}{args.ExceptionObject}");
+				} finally {
+					Environment.Exit(1);
+				}
 			};
 		}
 	}
