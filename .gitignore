@@ -1,6 +1,7 @@
-packages/
 Debug/
 Release/
+bin/
+obj/
 .vs/
 *.user
 *.log
