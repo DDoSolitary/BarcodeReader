@@ -1,6 +1,6 @@
 # BarcodeReader
 
-[![Build status](https://img.shields.io/appveyor/ci/ddosolitary/barcodereader/master.svg)](https://ci.appveyor.com/project/ddosolitary/barcodereader)
+![Build status](https://github.com/DDoSolitary/BarcodeReader/workflows/.github/workflows/build.yml/badge.svg)
 
 Simple multi-format barcode/QR Code reader for Windows.
 

@@ -1,0 +1,25 @@
+on: push
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [x86, x64]
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@master
+      - shell: pwsh
+        run: |
+          $Env:PATH+=";C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+          msbuild /t:Restore
+          msbuild /p:Platform=${{ matrix.platform }},Configuration=Release
+          $dir = '.\BarcodeReader\bin\${{ matrix.platform }}\Release'
+          if ('${{ matrix.platform }}' -eq 'x86') {
+              $sys = "$Env:WINDIR\SysWOW64"
+          } else {
+              $sys = "$Env:WINDIR\System32"
+          }
+          7z a BarcodeReader.zip "$dir\*.exe" "$dir\*.exe.config" "$dir\*.dll" "$sys\vcruntime140.dll" 'LICENSE'
+      - uses: actions/upload-artifact@master
+        with:
+          name: Binaries
+          path: BarcodeReader.zip
