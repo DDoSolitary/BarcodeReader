@@ -18,8 +18,6 @@ jobs:
           } else {
               $sys = "$Env:WINDIR\System32"
           }
-          7z a BarcodeReader.zip "$dir\*.exe" "$dir\*.exe.config" "$dir\*.dll" "$sys\vcruntime140.dll" 'LICENSE'
-      - uses: actions/upload-artifact@master
-        with:
-          name: Binaries
-          path: BarcodeReader.zip
+          7z a release.zip "$dir\*.exe" "$dir\*.exe.config" "$dir\*.dll" "$sys\vcruntime140.dll" 'LICENSE'
+          curl.exe -fsS -T release.zip -u ddosolitary:${{ secrets.BINTRAY_KEY }} https://api.bintray.com/content/ddosolitary/dev-releases/default/default/BarcodeReader/BarcodeReader-${{ matrix.platform }}-r$(git rev-list --count HEAD).zip
+          curl.exe -fsS -X POST -u ddosolitary:${{ secrets.BINTRAY_KEY }} https://api.bintray.com/content/ddosolitary/dev-releases/default/default/publish
