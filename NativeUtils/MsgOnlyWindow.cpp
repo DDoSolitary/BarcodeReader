@@ -5,7 +5,12 @@
 
 namespace NativeUtils {
 	void Win32Assert(bool assertion) {
-		if (!assertion) throw gcnew Win32Exception();
+		if (!assertion) throw gcnew Win32Exception(GetLastError());
+	}
+
+	void ShowError(LPCTSTR msg) {
+		MessageBox(nullptr, msg, _T("Error - BarcodeReader"), MB_OK | MB_ICONWARNING | MB_TASKMODAL | MB_SETFOREGROUND | MB_TOPMOST);
+
 	}
 
 	LRESULT CALLBACK WndProcWrapper(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -23,7 +28,9 @@ namespace NativeUtils {
 			this->OnClipboardUpdate();
 			break;
 		case WM_USER:
-			Win32Assert(::RegisterHotKey(_hWnd, wParam, lParam & 0xffff, lParam >> 16));
+			if (!::RegisterHotKey(_hWnd, wParam, lParam & 0xffff, lParam >> 16)) {
+				ShowError(_T("Failed to register the hotkey."));
+			}
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
@@ -34,16 +41,22 @@ namespace NativeUtils {
 	}
 
 	void MsgOnlyWindow::MsgLoop() {
-		_hWnd = CreateWindow(WndClassName, nullptr, 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, nullptr, nullptr);
-		Win32Assert(_hWnd != nullptr && AddClipboardFormatListener(_hWnd));
-		_signal->Set();
-		Thread::SetData(Thread::GetNamedDataSlot(TlsName), this);
-		MSG msg;
-		BOOL res;
-		while ((res = GetMessage(&msg, nullptr, 0, 0)) != 0) {
-			Win32Assert(res != -1);
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+		try {
+			_hWnd = CreateWindow(WndClassName, nullptr, 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, nullptr, nullptr);
+			Win32Assert(_hWnd != nullptr && AddClipboardFormatListener(_hWnd));
+			_signal->Set();
+			Thread::SetData(Thread::GetNamedDataSlot(TlsName), this);
+			MSG msg;
+			BOOL res;
+			while ((res = GetMessage(&msg, nullptr, 0, 0)) != 0) {
+				Win32Assert(res != -1);
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+		} catch (Exception ^e) {
+			ShowError(_T("Error occurred when listening to hotkeys and clipboard updates."));
+		} finally {
+			_hWnd = nullptr;
 		}
 	}
 
@@ -67,7 +80,9 @@ namespace NativeUtils {
 	}
 
 	void MsgOnlyWindow::Close() {
-		Win32Assert(PostMessage(_hWnd, WM_CLOSE, 0, 0));
+		if (_hWnd) {
+			Win32Assert(PostMessage(_hWnd, WM_CLOSE, 0, 0));
+		}
 		delete _signal;
 	}
 }
