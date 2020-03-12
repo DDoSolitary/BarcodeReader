@@ -54,7 +54,9 @@ namespace NativeUtils {
 				DispatchMessage(&msg);
 			}
 		} catch (Exception ^e) {
-			ShowError(_T("Error occurred when listening to hotkeys and clipboard updates."));
+			auto msg = "Error occurred when listening to hotkeys and clipboard updates:" + Environment::NewLine + e->Message;
+			pin_ptr<const wchar_t> cMsg = PtrToStringChars(msg);
+			ShowError(cMsg);
 		} finally {
 			_hWnd = nullptr;
 		}

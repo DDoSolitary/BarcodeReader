@@ -11,5 +11,6 @@
 #include <cstdint>
 #include <Windows.h>
 #include <tchar.h>
+#include <vcclr.h>
 
 #endif //PCH_H
