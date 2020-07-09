@@ -59,6 +59,10 @@ namespace BarcodeReader {
 
 		public CaptureWindow() {
 			this.InitializeComponent();
+			this.Left = SystemParameters.VirtualScreenLeft;
+			this.Top = SystemParameters.VirtualScreenTop;
+			this.Width = SystemParameters.VirtualScreenWidth;
+			this.Height = SystemParameters.VirtualScreenHeight;
 			_info = (SelectionInfo)this.DataContext;
 			try {
 				_bgBrush.ImageSource = this.GetScreenshot();
@@ -114,8 +118,8 @@ namespace BarcodeReader {
 		private BitmapImage GetScreenshot() {
 			var x = (int)SystemParameters.VirtualScreenLeft;
 			var y = (int)SystemParameters.VirtualScreenTop;
-			var w = (int)SystemParameters.PrimaryScreenWidth;
-			var h = (int)SystemParameters.PrimaryScreenHeight;
+			var w = (int)SystemParameters.VirtualScreenWidth;
+			var h = (int)SystemParameters.VirtualScreenHeight;
 			using (var bmp = new Bitmap(w, h)) {
 				using (var g = Graphics.FromImage(bmp)) {
 					g.CopyFromScreen(x, y, 0, 0, new System.Drawing.Size(w, h));

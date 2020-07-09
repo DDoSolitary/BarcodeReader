@@ -3,7 +3,7 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
 		xmlns:local="clr-namespace:BarcodeReader"
-		Title="Screenshot - BarcodeReader" WindowState="Maximized" WindowStyle="None" Opacity="0"
+		Title="Screenshot - BarcodeReader" WindowStyle="None" ResizeMode="NoResize" Topmost="True" Opacity="0"
 		KeyDown="Window_KeyDown" Closed="Window_Closed" ContentRendered="Window_ContentRendered">
 	<Window.DataContext>
 		<local:SelectionInfo/>
