@@ -4,11 +4,10 @@ jobs:
     strategy:
       matrix:
         platform: [x86, x64]
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@master
-      - shell: pwsh
-        run: |
+      - run: |
           $Env:PATH+=";C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
           msbuild /t:Restore
           msbuild /p:Platform=${{ matrix.platform }},Configuration=Release
@@ -20,8 +19,13 @@ jobs:
               $sys = "$Env:WINDIR\System32"
           }
           7z a release.zip "$dir\*.exe" "$dir\*.exe.config" "$dir\*.dll" "$sys\vcruntime140.dll" 'LICENSE'
+      - if: github.ref == 'refs/heads/master'
+        run: |
           cmd /c "git fetch --tags --unshallow 2>&1"
-          curl.exe -fsS -T release.zip -u ddosolitary:${{ secrets.BINTRAY_KEY }} https://api.bintray.com/content/ddosolitary/dev-releases/default/default/BarcodeReader/BarcodeReader-r$(git rev-list --count HEAD)-${{ matrix.platform }}.zip
-          if ($LASTEXITCODE -ne 0) { exit 1 }
-          curl.exe -fsS -X POST -u ddosolitary:${{ secrets.BINTRAY_KEY }} https://api.bintray.com/content/ddosolitary/dev-releases/default/default/publish
+          curl.exe -fsS -T release.zip `
+              -u ddosolitary:${{ secrets.BINTRAY_KEY }} `
+              -H "X-Bintray-Package: default" `
+              -H "X-Bintray-Version: default" `
+              -H "X-Bintray-Publish: 1" `
+              https://api.bintray.com/content/ddosolitary/dev-releases/BarcodeReader/BarcodeReader-r$(git rev-list --count HEAD)-${{ matrix.platform }}.zip
           if ($LASTEXITCODE -ne 0) { exit 1 }
