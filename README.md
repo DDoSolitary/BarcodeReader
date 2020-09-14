@@ -13,4 +13,4 @@ Simple multi-format barcode/QR Code reader for Windows.
 
 # Download
 
-https://dl.bintray.com/ddosolitary/dev-releases/BarcodeReader/
+https://ddosolitary-builds.sourceforge.io/BarcodeReader/
