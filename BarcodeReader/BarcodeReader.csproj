@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
-    <PackageReference Include="DynamicExpresso.Core" Version="2.8.1" />
+    <PackageReference Include="DynamicExpresso.Core" Version="2.12.0" />
     <PackageReference Include="ZXing.Net" Version="0.16.6" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
